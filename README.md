@@ -1,9 +1,6 @@
 #  32-Bit Calculator Processor on FPGA
 
-## Overview
-
 This project implements a simple 32-bit instruction-driven calculator processor using Verilog HDL. The design integrates a Register File, Arithmetic Logic Unit (ALU), Instruction Register, Write-Back Register, and an FSM-based Control Unit.
-
 The processor accepts 16-bit instructions, decodes instruction fields, performs arithmetic and logical operations, and writes the result back to a destination register. The design was verified using Vivado simulation and implemented on FPGA hardware.
 
 ---
