@@ -1,11 +1,11 @@
 # 32-bit-Calculator-Processor-
 32-bit instruction-driven calculator processor implemented in Verilog HDL on FPGA.
-Overview
-This project implements a simple 32-bit instruction-driven calculator processor using Verilog HDL. The design integrates a Register File, Arithmetic Logic Unit (ALU), Instruction Register, Write-Back Register, and FSM-based Control Unit.
 
+This project implements a simple 32-bit instruction-driven calculator processor using Verilog HDL. The design integrates a Register File, Arithmetic Logic Unit (ALU), Instruction Register, Write-Back Register, and FSM-based Control Unit.
 The processor accepts 16-bit instructions, decodes the opcode and register fields, performs arithmetic or logical operations, and writes the result back to a destination register. The design was verified using Vivado simulation and implemented on FPGA hardware.
 
-Project Objectives
+Project Objectives:-
+
 Design a 32-bit processor-like calculator architecture.
 Implement arithmetic and logical operations in hardware.
 Understand instruction encoding and decoding.
@@ -13,6 +13,7 @@ Design a register file with read/write functionality.
 Implement an FSM-based control unit.
 Verify the processor through simulation.
 Implement and test the design on FPGA hardware.
+
 Features
 Datapath Features
 32-bit datapath
@@ -21,6 +22,7 @@ Datapath Features
 Signed immediate loading
 Registered write-back path
 FSM-controlled execution
+
 Supported Operations
 Opcode	Operation
 LOADI	Load Immediate
@@ -33,66 +35,9 @@ OR	Bitwise OR
 XOR	Bitwise XOR
 SHL	Shift Left
 SHR	Shift Right
-System Architecture
-                     +-------------------+
-                     | Instruction Input |
-                     +---------+---------+
-                               |
-                               v
-                     +-------------------+
-                     | Instruction       |
-                     | Register          |
-                     +---------+---------+
-                               |
-                               v
-                     +-------------------+
-                     | Decode Logic      |
-                     +---------+---------+
-                               |
-                               v
-                     +-------------------+
-                     | Register File     |
-                     +---------+---------+
-                               |
-                               v
-                     +-------------------+
-                     | 32-bit ALU        |
-                     +---------+---------+
-                               |
-                               v
-                     +-------------------+
-                     | Write-Back Reg    |
-                     +---------+---------+
-                               |
-                               v
-                     +-------------------+
-                     | Register File     |
-                     +-------------------+
 
-                               ^
-                               |
-                        +-------------+
-                        | Control FSM |
-                        +-------------+
-Instruction Format
-ALU Instructions
-15      12 11   9 8    6 5    3 2  0
-+---------+------+-------+------+----+
-| opcode  |  rd  |  rs1  | rs2  |000 |
-+---------+------+-------+------+----+
-LOADI Instruction
-15      12 11   9 8              0
-+---------+------+----------------+
-| 1001    |  rd  |    imm9        |
-+---------+------+----------------+
-Where:
 
-opcode = Operation selection
-rd = Destination register
-rs1 = Source register 1
-rs2 = Source register 2
-imm9 = 9-bit signed immediate value
-Processor Components
+
 1. Instruction Register
 Stores the incoming 16-bit instruction before execution.
 
@@ -101,11 +46,11 @@ Responsibilities:
 Captures instruction on latch_instr
 Holds instruction during execution
 Supplies opcode and register fields
+
 2. Register File
 Stores operands and results.
 
 Features:
-
 Eight 32-bit registers
 Two read ports
 One write port
@@ -119,6 +64,7 @@ R4
 R5
 R6
 R7
+
 3. Arithmetic Logic Unit (ALU)
 Performs arithmetic and logical operations.
 
@@ -127,10 +73,12 @@ Inputs:
 Operand A
 Operand B
 Opcode
+
 Outputs:
 
 Result
 Division-by-zero flag
+
 4. Write-Back Register
 The ALU result is first stored in a registered write-back stage before being written to the register file.
 
@@ -159,7 +107,9 @@ EXECUTE
 WRITE BACK
  ↓
 DONE
+
 FPGA Interface
+
 Inputs
 Signal	Description
 SW[15:0]	Instruction Input
@@ -170,6 +120,7 @@ Signal	Description
 LED0	Busy Flag
 LED1	Done Flag
 7-Segment Display	Result Display
+
 Example Execution
 Load Operands
 LOADI R1,10
@@ -201,6 +152,7 @@ AND R7,R1,R2
 OR  R0,R1,R2
 XOR R1,R1,R2
 SHL R2,R1,R2
+
 Observed Results:
 
 10
@@ -224,35 +176,13 @@ Result display on seven-segment displays
 Busy and Done status indication using LEDs
 A hardware demonstration video is available in the repository.
 
-Repository Structure
-32-bit-Calculator-Processor/
-│
-├── README.md
-├── LICENSE
-│
-├── src/
-│   ├── alu.v
-│   ├── calc_top.v
-│   ├── controlfsm.v
-│   └── reg_file.v
-│
-├── sim/
-│   └── calc_tb.v
-│
-├── constraints/
-│   └── constraints.xdc
-│
-├── screenshots/
-│   ├── waveform.png
-│   └── rtl_schematic.png
-│
-└── demo/
-    └── implementation_demo.mp4
 Tools Used
+
 Verilog HDL
 Xilinx Vivado
 FPGA Development Board
 RTL Design Methodology
+
 Learning Outcomes
 Through this project, the following concepts were explored:
 
@@ -265,6 +195,7 @@ Instruction Decoding
 Write-Back Architecture
 FPGA Synthesis and Implementation
 Hardware Verification using Testbenches
+
 Future Improvements
 Possible enhancements include:
 
@@ -274,9 +205,8 @@ Branch Instructions
 UART-Based Instruction Entry
 Pipelined Execution
 Additional ALU Operations
+
 Author
 Sency Antony
-
-B.Tech Electronics and Communication Engineering
-
-Model Engineering College
+B.Tech Electronics Engineering(VLSI Design and Technology)
+Government Model Engineering College
