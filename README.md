@@ -49,21 +49,13 @@ The processor accepts 16-bit instructions, decodes instruction fields, performs 
 
 ```mermaid
 flowchart TD
-
     A[Instruction Input<br/>16-bit Instruction]
-
     B[Instruction Register]
-
     C[Instruction Decode<br/>Opcode<br/>rd<br/>rs1<br/>rs2]
-
     D[Register File<br/>8 × 32-bit Registers]
-
     E[32-bit ALU<br/>ADD<br/>SUB<br/>MUL<br/>DIV<br/>AND<br/>OR<br/>XOR<br/>SHL<br/>SHR]
-
     F[Write-Back Register]
-
     G[Register File<br/>Result Storage]
-
     H[FSM Control Unit<br/>latch_instr<br/>reg_write_en<br/>busy<br/>done]
 
     A --> B
