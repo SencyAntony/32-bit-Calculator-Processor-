@@ -20,11 +20,11 @@ module alu (
     localparam OP_DIV   = 4'b1010;
 
     always @(*) begin
-        div_by_zero = 1'b0;                       //don't want the flag to accidentally stay high from a previous operation.
+        div_by_zero = 1'b0;                       
         case (op)
             OP_ADD: result = a + b;
             OP_SUB: result = a - b;
-            OP_MUL: result = a * b;              // lower 32 bits of product
+            OP_MUL: result = a * b;              
             OP_AND: result = a & b;
             OP_OR:  result = a | b;
             OP_XOR: result = a ^ b;
@@ -38,7 +38,7 @@ module alu (
                     result = a / b;
                 end
             end
-            default: result = 32'd0;             //If the op input doesn't match any of the defined opcodes (ADD, SUB, MUL, etc.), the ALU sets the result to zero.
+            default: result = 32'd0;             
         endcase
     end
 
