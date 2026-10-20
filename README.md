@@ -98,33 +98,45 @@ The processor accepts 16-bit instructions, decodes the opcode and register field
 
 ### ALU Instructions
 
-```text
-15      12 11   9 8    6 5    3 2  0
-+---------+------+-------+------+----+
-| opcode  |  rd  |  rs1  | rs2  |000 |
-+---------+------+-------+------+----+
-```
+| Bits | 15:12 | 11:9 | 8:6 | 5:3 | 2:0 |
+|--------|--------|------|------|------|------|
+| Field | Opcode | rd | rs1 | rs2 | Unused |
+
+| Field | Description |
+|---------|------------|
+| Opcode | Selects ALU operation |
+| rd | Destination Register |
+| rs1 | Source Register 1 |
+| rs2 | Source Register 2 |
+| Unused | Reserved Bits |
 
 ### LOADI Instruction
 
-```text
-15      12 11   9 8              0
-+---------+------+----------------+
-| 1001    |  rd  |    imm9        |
-+---------+------+----------------+
-```
+| Bits | 15:12 | 11:9 | 8:0 |
+|--------|--------|------|------|
+| Field | 1001 | rd | imm9 |
 
-Where:
-
-- opcode = Operation selection
-- rd = Destination register
-- rs1 = Source register 1
-- rs2 = Source register 2
-- imm9 = 9-bit signed immediate value
+| Field | Description |
+|---------|------------|
+| 1001 | LOADI Opcode |
+| rd | Destination Register |
+| imm9 | Signed 9-bit Immediate Value |
 
 ---
 
-## Processor Components
+## Execution Flow
+
+| Step | Operation |
+|---------|-----------|
+| 1 | Load 16-bit Instruction |
+| 2 | Store Instruction in Instruction Register |
+| 3 | Decode Opcode and Register Fields |
+| 4 | Read Operands from Register File |
+| 5 | Execute Operation in ALU |
+| 6 | Store Result in Write-Back Register |
+| 7 | Write Result to Destination Register |
+| 8 | Assert DONE Signal |
+| 9 | Wait for Next Instruction |
 
 ### 1. Instruction Register
 
