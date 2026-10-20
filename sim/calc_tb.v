@@ -1,8 +1,4 @@
  `timescale 1ns / 1ps
-//------------------------------------------------------------------
-// calc_tb.v
-// Testbench for calc_top
-//------------------------------------------------------------------
 module calc_tb;
 
     reg         clk;
@@ -13,7 +9,6 @@ module calc_tb;
     wire        done;
     wire [31:0] result;
 
-    // opcodes (must match alu.v / calc_top.v)
     localparam OP_ADD   = 4'b0001;
     localparam OP_SUB   = 4'b0010;
     localparam OP_MUL   = 4'b0011;
@@ -29,12 +24,10 @@ module calc_tb;
         .clk(clk), .rst(rst), .start(start), .instr(instr),
         .busy(busy), .done(done), .result(result)
     );
-
-    // 100 MHz clock
+ 
     initial clk = 0;
     always #5 clk = ~clk;
-
-    // helper: build instruction word
+ 
     function [15:0] mk_instr;
         input [3:0] op;
         input [2:0] rd, rs1, rs2;
@@ -50,8 +43,7 @@ module calc_tb;
             mk_loadi = {OP_LOADI, rd, imm};
         end
     endfunction
-
-    // helper task: drive one instruction and wait for completion
+ 
     task run_instr;
         input [15:0] i;
         begin
@@ -61,7 +53,7 @@ module calc_tb;
             @(posedge clk);
             start = 1'b0;
             wait (done == 1'b1);
-            @(posedge clk); // let DONE state complete
+            @(posedge clk); 
             $display("t=%0t  instr=%h  result=%0d (0x%h)  [rs1_data=%0d rs2_data=%0d alu=%0d]",
                       $time, i, $signed(result), result,
                       dut.rs1_data, dut.rs2_data, dut.alu_result);
@@ -90,7 +82,7 @@ module calc_tb;
         run_instr(mk_instr(OP_DIV, 3'd6, 3'd1, 3'd2));
         // R7 = R1 & R2
         run_instr(mk_instr(OP_AND, 3'd7, 3'd1, 3'd2));
-        // R0 = R1 | R2  (R0 reused as scratch)
+        // R0 = R1 | R2  
         run_instr(mk_instr(OP_OR,  3'd0, 3'd1, 3'd2));
         // R1 = R1 ^ R2
         run_instr(mk_instr(OP_XOR, 3'd1, 3'd1, 3'd2));
