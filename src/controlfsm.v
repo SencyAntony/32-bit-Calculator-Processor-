@@ -1,27 +1,12 @@
 `timescale 1ns / 1ps
-//------------------------------------------------------------------
-// control_fsm.v
-// FSM control unit for the calculator processor
-//
-// States:
-//   IDLE       - wait for 'start'
-//   FETCH      - latch instruction
-//   DECODE     - decode opcode/operand fields (registers already
-//                driving read addresses combinationally)
-//   EXEC       - ALU computes result (combinational)
-//   EXEC_WAIT  - extra cycles for "slow" ops (MUL/DIV) to model
-//                multi-cycle latency
-//   WB         - write result back to register file
-//   DONE       - pulse 'done' for one cycle
-//------------------------------------------------------------------
 module control_fsm (
     input  wire        clk,
     input  wire        rst,
     input  wire        start,
-    input  wire [3:0]  opcode,     // decoded opcode of latched instr
+    input  wire [3:0]  opcode,     
     input  wire         is_loadi,
 
-    output reg          latch_instr,  // pulse: capture instr into IR
+    output reg          latch_instr,  
     output reg          reg_write_en,
     output reg          busy,
     output reg          done
@@ -40,26 +25,21 @@ module control_fsm (
 
     reg [2:0] state, next_state;
     reg [2:0] wait_cnt;
-
-    // wait_target is purely combinational (depends only on the
-    // currently latched opcode) so it is valid the same cycle we
-    // enter S_EXEC -- avoids a register race with next_state logic
     reg [2:0] wait_target;
     always @(*) begin
         case (opcode)
-            OP_MUL:  wait_target = 3'd1; // 1 extra cycle
-            OP_DIV:  wait_target = 3'd3; // 3 extra cycles
+            OP_MUL:  wait_target = 3'd1; 
+            OP_DIV:  wait_target = 3'd3; 
             default: wait_target = 3'd0;
         endcase
     end
 
-    // ---------------- state register ----------------
+    //state register 
     always @(posedge clk or posedge rst) begin
         if (rst) state <= S_IDLE;
         else     state <= next_state;
     end
 
-    // ---------------- wait counter for multi-cycle ops ----------------
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             wait_cnt <= 3'd0;
@@ -70,7 +50,7 @@ module control_fsm (
         end
     end
 
-    // ---------------- next-state logic ----------------
+    //next-state logic
     always @(*) begin
         next_state = state;
         case (state)
@@ -85,7 +65,7 @@ module control_fsm (
         endcase
     end
 
-    // ---------------- output logic (Moore) ----------------
+    // output logic (Moore)
     always @(*) begin
         latch_instr  = (state == S_FETCH);
         reg_write_en = (state == S_WB);
