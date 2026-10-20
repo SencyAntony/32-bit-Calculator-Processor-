@@ -1,31 +1,19 @@
 `timescale 1ns / 1ps
-//------------------------------------------------------------------
 // calc_top.v
 // 32-bit calculator processor: reg file + ALU + FSM control unit
-//
-// Instruction format (16 bits):
-//   [15:12] opcode
-//   [11:9]  rd            (destination register, always here)
-//   [8:6]   rs1
-//   [5:3]   rs2
-//   [2:0]   unused (ALU ops)
-//
-// LOADI reuses bits [8:0] as a 9-bit signed immediate:
-//   [15:12]=1001, [11:9]=rd, [8:0]=imm9
-//------------------------------------------------------------------
 module calc_top (
     input  wire        clk,
     input  wire        rst,
     input  wire        start,
-    input  wire [15:0] instr,       // instruction presented by testbench/host
+    input  wire [15:0] instr,      
     output wire         busy,
     output wire         done,
-    output wire [31:0]  result       // value written back this op
+    output wire [31:0]  result       
 );
 
     localparam OP_LOADI = 4'b1001;
 
-    // ---------------- instruction register ----------------
+    //instruction register 
     reg [15:0] instr_reg;
     wire       latch_instr;
 
@@ -43,31 +31,17 @@ module calc_top (
 
     wire is_loadi = (opcode == OP_LOADI);
 
-    // ---------------- register file ----------------
+    //register file 
     wire [31:0] rs1_data, rs2_data;
     wire         reg_write_en;
-
-    // Raw (unregistered) candidate write-back value. NOTE: this must
-    // NOT be wired directly into the regfile's write port, because if
-    // rd == rs1/rs2 the regfile's write-through read bypass would feed
-    // this value straight back into the ALU inputs that produced it,
-    // forming a combinational loop. Instead it is captured into
-    // wb_data_reg every cycle and that registered copy is what
-    // actually drives the write port (see below).
     wire [31:0] raw_wr_data = is_loadi ? imm32 : alu_result;
-
     reg [31:0] wb_data_reg;
+    
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             wb_data_reg <= 32'd0;
         end else if (!reg_write_en) begin
-            // Freeze once write-back begins: during the WB cycle the
-            // regfile's own read-bypass could otherwise feed the
-            // about-to-be-written value back into rs1_data/rs2_data
-            // (when rd == rs1 or rd == rs2) and corrupt this capture
-            // register on the following edge, even though the actual
-            // register-file write itself (using this same signal as
-            // wr_data) is unaffected and correct.
+    
             wb_data_reg <= raw_wr_data;
         end
     end
@@ -79,7 +53,7 @@ module calc_top (
         .we(reg_write_en), .wr_addr(rd_addr), .wr_data(wb_data_reg)
     );
 
-    // ---------------- ALU ----------------
+    //ALU 
     wire [31:0] alu_result;
     wire         div_by_zero;
 
@@ -88,17 +62,14 @@ module calc_top (
         .result(alu_result), .div_by_zero(div_by_zero)
     );
 
-    // ---------------- control FSM ----------------
+    //control FSM 
     control_fsm u_fsm (.clk(clk),.rst(rst),.start(start),.opcode(opcode),.is_loadi(is_loadi),.latch_instr(latch_instr),.reg_write_en(reg_write_en),.busy(busy),.done(done));
 
     assign result = wb_data_reg;
 
 endmodule
 
-
-//for hardware------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-`timescale 1ns / 1ps
+//7-segment display
 module seg7_bank (
     input  wire        clk,
     input  wire [15:0] value,
@@ -144,9 +115,7 @@ module seg7_bank (
     end
 endmodule
 
-
-
-`timescale 1ns / 1ps
+//boolean_top
 module boolean_top (
     input  wire        mclk,
     input  wire [15:0] sw,
