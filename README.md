@@ -115,7 +115,7 @@ flowchart TD
 
 ---
 
-## 🔧 Processor Components
+## Processor Components
 
 ### 1. Instruction Register
 
